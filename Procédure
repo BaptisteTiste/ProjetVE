@@ -1,0 +1,20 @@
+Etapes :
+
+Lancer le docker
+    docker-compose down
+    docker-compose up -d
+
+Vérifier l'état du docker 
+    docker ps
+
+Lancer le serveur 
+    node server.js
+On doit avoir le message suivant : 
+    "Serveur en cours d'exécution sur le port 3000
+    Connecté à la base de données MySQL."
+
+-----------------------------------------------------
+Se connecter à la base de données (profil baptiste)
+    docker exec -it mysql_container mysql -u baptiste -p
+
+

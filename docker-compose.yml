@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_container
+    ports:
+      - "3307:3306"  # Port exposé sur le PC
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234  # Mot de passe root pour MySQL
+      MYSQL_DATABASE: projetVE     # Nom de la base de données
+      MYSQL_USER: baptiste    # Utilisateur MySQL
+      MYSQL_PASSWORD: 1234 # Mot de passe utilisateur
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
