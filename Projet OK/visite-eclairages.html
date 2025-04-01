@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Visite d'Éclairages</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0f172a;
+      --secondary: #1e293b;
+      --accent: #3b82f6;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+    }
+
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        margin: 0;
+        background: linear-gradient(135deg, #0f172a, #3b82f6); /* Dégradé du bleu foncé au bleu clair */
+        color: var(--text);
+    }
+
+    /* 👇 Améliorer le header */
+    header {
+  background: linear-gradient(135deg, #3b82f6, #0f172a);
+  color: white;
+  padding: 1rem 1rem 0.5rem;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+    /* 🧭 Navbar plus claire */
+    nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  padding: 0.5rem;
+  background-color: #1e3a8a;
+}
+
+    nav button {
+      background-color: var(--card);
+      color: var(--primary);
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    nav button:hover {
+      background-color: #dbeafe;
+    }
+
+    /* 💡 Centrage du contenu et max-width */
+    section {
+  position: absolute;
+  top: 140px; /* Ajuste selon la hauteur de ton header + nav */
+  left: 25%;
+  transform: translateX(-50%);
+  max-width: 900px;
+  width: 100%;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 10px;
+  padding: 2rem;
+}
+
+
+    /* 🪄 Fluidité lors des changements */
+    section.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  position: relative;
+  top: auto;
+  transform: none;
+}
+
+    section:not(.active) {
+  opacity: 0;
+  pointer-events: none;
+  height: 0;
+  overflow: hidden;
+  transition: opacity 0.3s ease; /* 👈 on enlève transform */
+}
+
+    .box {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-top: 1rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+
+    label, select, input, textarea {
+      display: block;
+      margin: 0.8rem 0 0.4rem;
+      width: 100%;
+      font-size: 1rem;
+    }
+
+    input, textarea, select {
+      padding: 0.6rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      background-color: #f1f5f9;
+    }
+
+    button.action {
+  background-color: #3b82f6;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+button.action:hover {
+  background-color: #2563eb;
+}
+
+    /* Style du bouton Supprimer */
+    button.delete {
+        background-color: #e53e3e; /* Rouge clair */
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        font-size: 0.9rem;
+    }
+
+    button.delete:hover {
+        background-color: #c53030; /* Rouge foncé */
+        transform: scale(1.05); /* Effet de zoom */
+    }
+
+    button.delete:focus {
+        outline: none;
+        box-shadow: 0 0 5px rgba(255, 0, 0, 0.6); /* Ombre rouge autour du bouton lorsqu'il est sélectionné */
+    }
+
+    button.delete i {
+        margin-right: 8px; /* Espacement entre l'icône et le texte */
+    }
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+        margin-top: 1rem;
+    }
+
+    li {
+      background: #f1f5f9;
+      padding: 0.75rem;
+      margin-bottom: 0.5rem;
+      border-radius: 5px;
+    }
+
+    html {
+        height: 100%;
+    }
+
+    body {
+        height: 100%;
+        background: linear-gradient(135deg, #0f172a, #3b82f6); /* Dégradé bleu foncé à bleu clair */
+        color: var(--text);
+    }
+
+    section {
+        background: rgba(255, 255, 255, 0.8); /* Légère opacité pour les sections */
+        border-radius: 10px;
+        padding: 2rem;
+        margin-top: 2rem;
+    }
+
+    footer {
+  background-color: #1e293b; /* Couleur sombre pour le footer */
+  color: white;
+  padding: 2rem;
+  text-align: center;
+}
+
+.badge {
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  display: inline-block;
+}
+.badge-green {
+  background-color: #10b981;
+  color: white;
+}
+.badge-red {
+  background-color: #ef4444;
+  color: white;
+}
+
+.feedback {
+  padding: 10px;
+  margin-top: 1rem;
+  font-weight: bold;
+  border-radius: 6px;
+  animation: fadeIn 0.3s ease;
+}
+
+.feedback.bon {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.feedback.defectueux {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+#current_eclairage_box {
+  border: 2px solid #3b82f6;
+  border-radius: 12px;
+  background-color: #f1f5f9;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  padding: 1.5rem;
+  margin-top: 1rem;
+}
+
+#current_eclairage_box:hover {
+  transform: scale(1.01);
+}
+
+#current_eclairage_box p {
+  font-size: 1.1rem;
+  margin-bottom: 0.8rem;
+}
+
+#current_eclairage_box.highlight {
+  animation: flash 0.3s ease;
+}
+
+@keyframes flash {
+  0% { background-color: #e0f2fe; }
+  100% { background-color: #f1f5f9; }
+}
+
+footer .footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+}
+
+footer .contact-info, footer .social-media {
+  flex: 1;
+}
+
+footer h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+footer p {
+  margin-bottom: 0.5rem;
+}
+
+footer .social-media a {
+  color: white;
+  font-size: 1.5rem;
+  margin-right: 1rem;
+}
+
+footer .social-media a:hover {
+  color: #3b82f6; /* Effet de survol sur les icônes */
+}
+
+footer .social-media i {
+  margin-right: 10px;
+}
+
+footer .social-media a {
+  transition: transform 0.3s ease-in-out;
+}
+
+footer .social-media a:hover {
+  transform: scale(1.2); /* Agrandir l'icône au survol */
+  color: #3b82f6; /* Changer la couleur au survol */
+}
+
+
+
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Application de visite d'éclairages</h1>
+    <p>Gérez, contrôlez et suivez les éclairages dans vos salles à l'aide de notre nouvelle application</p>
+  </header>
+
+  <nav>
+    <button onclick="showTab('salles')">Gérer les salles</button>
+    <button onclick="showTab('eclairages')">Créer des éclairages</button>
+    <button onclick="showTab('visites')">Gérer les visites</button>
+    <button onclick="showTab('rapports')">Voir les rapports</button>
+  </nav>
+
+  <!-- Onglet : Gérer les salles -->
+  <section id="salles">
+    <h2>Créer une salle</h2>
+    <div class="box">
+      <label for="nom_salle">Nom de la salle</label>
+      <input type="text" id="nom_salle" placeholder="Ex: Salle A" required>
+  
+      <label for="description_salle">Description</label>
+      <textarea id="description_salle" rows="3" placeholder="Ex: Zone nord, près des machines"></textarea>
+  
+      <button class="action" onclick="createSalle()">Créer la salle</button>
+    </div>
+  
+    <h3>Salles existantes :</h3>
+    <ul id="salles_list"></ul>  <!-- Liste des salles sous le formulaire -->
+  </section>
+
+  <!-- Onglet : Créer des éclairages -->
+  <section id="eclairages">
+    <h2>Créer un éclairage dans une salle</h2>
+    <div class="box">
+      <label for="salle_select">Sélectionnez la salle</label>
+      <select id="salle_select" required></select> <!-- Liste déroulante des salles pour éclairages -->
+  
+      <label for="id_eclair_salle">ID local de l'éclairage</label>
+      <input type="number" id="id_eclair_salle" placeholder="Ex: 1" required>      
+
+      <label for="posx">Position X</label>
+      <input type="number" id="posx" placeholder="Ex: 2.5" required>
+  
+      <label for="posy">Position Y</label>
+      <input type="number" id="posy" placeholder="Ex: 3.0" required>
+  
+      <label for="posz">Position Z</label>
+      <input type="number" id="posz" placeholder="Ex: 2.0" required>
+  
+      <button class="action" onclick="createEclairage()">Ajouter l'éclairage</button>
+    </div>
+  
+    <h3>Éclairages existants :</h3>
+    <ul id="eclairages_list"></ul>
+  </section>
+
+  <!-- Onglet : Créer une visite -->
+  <section id="visites">
+    <h2>Gérer les visites</h2>
+    <div class="box">
+      <label for="visite_salle_select">Sélectionnez la salle</label>
+      <select id="visite_salle_select" required></select>
+
+      <label for="utilisateur_id">Sélectionnez l'utilisateur</label>
+      <select id="utilisateur_id" required></select>
+
+      <label for="commentaire_visite">Commentaire</label>
+      <textarea id="commentaire_visite" rows="3" placeholder="Ex: Vérification des éclairages"></textarea>
+
+      <button class="action" onclick="createVisite()">Créer la visite</button>
+    </div>
+
+    <h3>Visites existantes :</h3>
+    <ul id="visites_list"></ul>
+  </section>
+
+  <!-- Onglet : Visite en cours -->
+<section id="visite_en_cours">
+  <h2>Visite en cours</h2>
+  <div class="box" id="current_eclairage_box">
+    <p id="progression" style="font-weight:bold; color:#1e40af; margin-bottom:1rem;"></p>
+    <p style="font-weight:bold; font-size:1.2rem;">
+      🔦 Éclairage <span id="eclairage_id"></span>
+    </p>
+    <p>📍 Position : (<span id="coord_posx"></span>, <span id="coord_posy"></span>, <span id="coord_posz"></span>)</p>
+    <p>
+      <button class="action" onclick="validerEclairage('bon')">✅ Bon</button>
+      <button class="action" onclick="validerEclairage('defectueux')">❌ Défectueux</button>
+    </p>
+    <input type="text" id="remarque_input" placeholder="Remarque (optionnel)">
+  </div>
+  
+</section>
+
+  <!-- Onglet : Voir les rapports -->
+  <section id="rapports">
+    <h2>Voir les rapports</h2>
+    <div class="box">
+      <label for="visite_select">Sélectionnez une visite</label>
+      <select id="visite_select" required></select>
+
+      <button class="action" onclick="viewRapports()">Afficher les rapports</button>
+    </div>
+
+    <h3>Rapports :</h3>
+    <table id="rapports_table" style="width:100%; margin-top:1rem; border-collapse:collapse; text-align:center;">
+      <thead style="background-color:#3b82f6; color:white;">
+        <tr>
+          <th style="padding: 10px;">ID Éclairage</th>
+          <th style="padding: 10px;">Position</th>
+          <th style="padding: 10px;">État</th>
+          <th style="padding: 10px;">Remarque</th>
+          <th style="padding: 10px;">Date</th>
+        </tr>
+      </thead>
+      <tbody style="background-color:#f8fafc;"></tbody>
+    </table>
+    
+  </section>
+
+  <footer>
+    <div class="footer-content">
+      <div class="contact-info">
+        <h3>Contactez-nous</h3>
+        <p>baptiste.joosten@etu.unilasalle.fr</p>
+        <p>pierre.petit@etu.unilasalle.fr</p>
+        <p>Campus UniLaSalle, Amiens, 80000</p>
+      </div>
+      <div class="social-media">
+        <h3>Suivez-nous</h3>
+        <a href="#" target="_blank"><i class="fab fa-facebook"></i></a>
+        <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+        <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Fonction pour changer les onglets
+    function showTab(tabName) {
+  const sections = document.querySelectorAll('section');
+  sections.forEach((section) => {
+    section.classList.remove('active');
+  });
+  document.getElementById(tabName).classList.add('active');
+
+  // Optionnel : remonter la page pour éviter le "saut"
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+    // PARTIE SALLES ----------------------------------------------------------------------
+
+    // Récupérer les salles (FONCTIONNE)
+    function loadSalles() {
+      fetch('/api/salles')
+        .then(response => response.json())
+        .then(data => {
+          const salleSelect = document.getElementById('salle_select');
+          const visiteSalleSelect = document.getElementById('visite_salle_select');
+          const sallesList = document.getElementById('salles_list');
+          salleSelect.innerHTML = '';
+          visiteSalleSelect.innerHTML = '';
+          sallesList.innerHTML = '';
+
+          data.forEach(salle => {
+            const option = document.createElement('option');
+            option.value = salle.id;
+            option.textContent = salle.nom;
+            salleSelect.appendChild(option);
+
+            const visiteOption = document.createElement('option');
+            visiteOption.value = salle.id;
+            visiteOption.textContent = salle.nom;
+            visiteSalleSelect.appendChild(visiteOption);
+
+            const li = document.createElement('li');
+            li.textContent = salle.nom;
+            sallesList.appendChild(li);
+          });
+        });
+    }
+
+    // Créer une salle (FONCTIONNE)
+    function createSalle() {
+  const nom = document.getElementById('nom_salle').value;
+  const description = document.getElementById('description_salle').value;
+
+  fetch('http://localhost:3000/api/salles', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ nom, description })
+  })
+  .then(response => response.json())
+  .then(() => {
+    loadSalles();  // Recharger les salles après la création
+  })
+  .catch(error => console.error('Erreur de création de salle:', error));
+}
+
+// Fonction pour supprimer une salle (FONCTIONNE)
+    function deleteSalle(salleId) {
+        fetch(`http://localhost:3000/api/salles/${salleId}`, {
+    method: 'DELETE',
+    })
+        .then(response => {
+    if (!response.ok) {
+      throw new Error('Erreur lors de la suppression de la salle');
+    }
+    alert('Salle supprimée avec succès');
+    loadSalles();  // Recharger la liste des salles après suppression
+  })
+  .catch(error => console.error('Erreur lors de la suppression de la salle:', error));
+}
+
+// PARTIE ECLAIRAGES ----------------------------------------------------------------------
+
+    // Créer un éclairage (FONCTIONNE)
+    function createEclairage() {
+  const salleId = document.getElementById('salle_select').value;
+  const idEclairSalle = document.getElementById('id_eclair_salle').value;
+  const PosX = document.getElementById('posx').value;
+  const PosY = document.getElementById('posy').value;
+  const PosZ = document.getElementById('posz').value;
+
+  fetch('http://localhost:3000/api/eclairages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      Id_Salle: parseInt(salleId),
+      Id_Eclair_Salle: parseInt(idEclairSalle),
+      PosX: parseFloat(PosX),
+      PosY: parseFloat(PosY),
+      PosZ: parseFloat(PosZ)
+    })
+  })
+  .then(() => loadEclairages(salleId));
+}
+
+    // Fonction pour charger les éclairages d'une salle (FONCTIONNE)
+    function loadEclairages(salleId) {
+  fetch(`http://localhost:3000/api/salles/${salleId}/eclairages`)
+    .then(response => response.json())
+    .then(data => {
+      const eclairagesList = document.getElementById('eclairages_list');
+      eclairagesList.innerHTML = ''; // Effacer la liste existante
+
+      data.forEach(eclairage => {
+        const li = document.createElement('li');
+        li.textContent = `Éclairage ${eclairage.id} - Pos: (${eclairage.PosX}, ${eclairage.PosY}, ${eclairage.PosZ}) - État: ${eclairage.etat}`;
+
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'delete';
+        deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i> Supprimer';
+        deleteButton.style.marginLeft = '10px';
+        deleteButton.onclick = () => deleteEclairage(eclairage.id, salleId); // 👈 Passe la salle aussi
+
+        li.appendChild(deleteButton);
+        eclairagesList.appendChild(li);
+      });
+    })
+    .catch(error => console.error('Erreur lors de la récupération des éclairages:', error));
+}
+
+    // Supprimer un éclairage 
+    function deleteEclairage(eclairageId, salleId) {
+  fetch(`http://localhost:3000/api/eclairages/${eclairageId}`, {
+    method: 'DELETE',
+  })
+  .then(response => {
+    if (!response.ok) throw new Error('Erreur lors de la suppression de l\'éclairage');
+    alert('Éclairage supprimé avec succès');
+    loadEclairages(salleId); // Recharge la liste après suppression
+  })
+  .catch(error => console.error('Erreur lors de la suppression de l\'éclairage:', error));
+}
+
+
+// PARTIE VISITES ET RAPPORTS ----------------------------------------------------------------------
+
+    // Créer une visite
+    function createVisite() {
+  const salleId = document.getElementById('visite_salle_select').value;
+  const utilisateurId = document.getElementById('utilisateur_id').value;
+  const commentaire = document.getElementById('commentaire_visite').value;
+
+  if (!salleId || !utilisateurId) {
+    alert("Veuillez sélectionner une salle et un utilisateur.");
+    return;
+  }
+
+  fetch('http://localhost:3000/api/visites', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      id_salle: salleId,
+      id_utilisateur: utilisateurId,
+      commentaire
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    alert("✅ Visite créée !");
+    loadVisites(); // Recharge la liste des visites
+    document.getElementById('commentaire_visite').value = '';
+  })
+  .catch(error => {
+    console.error("Erreur lors de la création de la visite :", error);
+    alert("Erreur lors de la création de la visite.");
+  });
+}
+
+
+    function loadUtilisateurs() {
+  fetch('http://localhost:3000/api/utilisateurs')
+    .then(response => response.json())
+    .then(data => {
+      const utilisateurSelect = document.getElementById('utilisateur_id');
+      utilisateurSelect.innerHTML = '';
+
+      data.forEach(user => {
+        const option = document.createElement('option');
+        option.value = user.id;
+        option.textContent = user.nom;
+        utilisateurSelect.appendChild(option);
+      });
+    })
+    .catch(error => console.error('Erreur lors du chargement des utilisateurs :', error));
+}
+
+    // Supprimer une visite
+    function deleteVisite(visiteId) {
+  fetch(`http://localhost:3000/api/visites/${visiteId}`, {
+    method: 'DELETE',
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error("Erreur lors de la suppression de la visite");
+    }
+    alert("Visite supprimée !");
+    loadVisites();
+  })
+  .catch(error => console.error("Erreur lors de la suppression de la visite :", error));
+}
+
+
+    // Récupérer les visites
+    function loadVisites() {
+  fetch('http://localhost:3000/api/visites')
+    .then(response => response.json())
+    .then(data => {
+      const visitesList = document.getElementById('visites_list');
+      const visiteSelect = document.getElementById('visite_select');
+
+      visitesList.innerHTML = '';
+      if (visiteSelect) visiteSelect.innerHTML = '';
+
+      data.forEach(visite => {
+        // ➕ Ajout dans la liste HTML des visites
+        const li = document.createElement('li');
+        li.textContent = `Visite ${visite.id} • Salle : ${visite.nom_salle} • Utilisateur : ${visite.nom_utilisateur} • Commentaire : ${visite.commentaire}`;
+
+        // 🗑️ Bouton Supprimer
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'delete';
+        deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i> Supprimer';
+        deleteButton.style.marginLeft = '10px';
+        deleteButton.onclick = () => deleteVisite(visite.id);
+        li.appendChild(deleteButton);
+
+        // ▶️ Bouton Commencer la visite
+        const startButton = document.createElement('button');
+        startButton.className = 'action';
+        startButton.textContent = '▶️ Commencer';
+        startButton.style.marginLeft = '10px';
+        startButton.onclick = () => commencerVisite(visite.id, visite.id_salle);
+        li.appendChild(startButton);
+
+        visitesList.appendChild(li);
+
+        // ➕ Ajout dans le select des rapports
+        if (visiteSelect) {
+          const option = document.createElement('option');
+          option.value = visite.id;
+          option.textContent = `Visite ${visite.id} - ${visite.nom_salle}`;
+          visiteSelect.appendChild(option);
+        }
+      });
+    })
+    .catch(error => console.error("Erreur lors du chargement des visites :", error));
+}
+
+
+    // Voir les rapports d'une visite
+    function viewRapports() {
+  const visiteId = document.getElementById('visite_select').value;
+
+  fetch(`http://localhost:3000/api/rapports/visite/${visiteId}`)
+    .then(response => response.json())
+    .then(data => {
+      const tableBody = document.querySelector('#rapports_table tbody');
+      tableBody.innerHTML = ''; // Vider l'ancien contenu
+
+      if (data.length === 0) {
+        const row = document.createElement('tr');
+        const cell = document.createElement('td');
+        cell.colSpan = 5;
+        cell.textContent = "Aucun rapport disponible pour cette visite.";
+        cell.style.textAlign = 'center';
+        cell.style.fontStyle = 'italic';
+        row.appendChild(cell);
+        tableBody.appendChild(row);
+        return;
+      }
+
+      // 🔽 Trie les rapports par date de création (du plus ancien au plus récent)
+      data.sort((a, b) => new Date(a.date_creation) - new Date(b.date_creation));
+
+      data.forEach(rapport => {
+        const row = document.createElement('tr');
+        const date = new Date(rapport.date_creation);
+        const dateStr = isNaN(date) ? 'Date invalide' : date.toLocaleString('fr-FR');
+
+        const badgeClass = rapport.etat === 'bon' ? 'badge badge-green' : 'badge badge-red';
+        const etatHTML = `<span class="${badgeClass}">${rapport.etat === 'bon' ? 'Bon' : 'Défectueux'}</span>`;
+
+        row.innerHTML = `
+          <td>${rapport.id_eclairage}</td>
+          <td>(${rapport.PosX}, ${rapport.PosY}, ${rapport.PosZ})</td>
+          <td>${etatHTML}</td>
+          <td>${rapport.remarque || '<i>–</i>'}</td>
+          <td>${dateStr}</td>
+        `;
+
+        tableBody.appendChild(row);
+      });
+    })
+    .catch(error => {
+      console.error("Erreur lors de la récupération des rapports :", error);
+    });
+}
+
+
+
+
+    let visiteEnCours = null;
+let eclairagesAInspecter = [];
+let indexActuel = 0;
+
+function commencerVisite(visiteId, salleId) {
+  visiteEnCours = visiteId;
+  indexActuel = 0;
+
+  fetch(`http://localhost:3000/api/salles/${salleId}/eclairages`)
+    .then(res => res.json())
+    .then(data => {
+      eclairagesAInspecter = data;
+      if (eclairagesAInspecter.length === 0) {
+        alert("Aucun éclairage à inspecter dans cette salle.");
+        return;
+      }
+
+      showTab('visite_en_cours');
+      setTimeout(() => {
+        afficherEclairageActuel(); // ✅ Appelé après que le DOM soit visible
+      }, 50);
+    });
+}
+
+
+function afficherEclairageActuel() {
+  const eclairage = eclairagesAInspecter[indexActuel];
+
+  const posX = eclairage.PosX || '-';
+  const posY = eclairage.PosY || '-';
+  const posZ = eclairage.PosZ || '-';
+
+  document.getElementById('eclairage_id').textContent = eclairage.id;
+  document.getElementById('coord_posx').textContent = posX;
+  document.getElementById('coord_posy').textContent = posY;
+  document.getElementById('coord_posz').textContent = posZ;
+  document.getElementById('remarque_input').value = '';
+
+  // ✅ Progression
+  const progress = document.getElementById('progression');
+  progress.textContent = `Éclairage ${indexActuel + 1} / ${eclairagesAInspecter.length}`;
+
+  // 💫 Animation sur l'encadré
+  const box = document.getElementById('current_eclairage_box');
+  box.classList.remove('highlight');
+  void box.offsetWidth; // Force reflow
+  box.classList.add('highlight');
+}
+
+function validerEclairage(etat) {
+  const eclairage = eclairagesAInspecter[indexActuel];
+  const remarque = document.getElementById('remarque_input').value;
+
+  if (!eclairage || !visiteEnCours) {
+    console.warn("Aucun éclairage ou visite non définie");
+    return;
+  }
+
+  // 🔄 Affichage immédiat d’un feedback animé
+  const box = document.getElementById('current_eclairage_box');
+  const feedback = document.createElement('div');
+  feedback.className = `feedback ${etat}`;
+  feedback.textContent = etat === 'bon' ? '✅ Éclairage signalé bon' : '❌ Éclairage signalé défectueux';
+  box.appendChild(feedback);
+
+  // 1. Enregistrement du rapport
+  fetch('http://localhost:3000/api/rapports', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      id_visite: visiteEnCours,
+      id_eclairage: eclairage.id,
+      etat,
+      remarque
+    })
+  });
+
+  // 2. Mise à jour de l’état
+  fetch(`http://localhost:3000/api/eclairages/${eclairage.id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ etat })
+  });
+
+  // 3. Attendre le retour visuel avant de passer à la suite
+  setTimeout(() => {
+    feedback.remove();
+
+    indexActuel++;
+    if (indexActuel < eclairagesAInspecter.length) {
+      afficherEclairageActuel();
+    } else {
+      alert("✅ Visite terminée !");
+      visiteEnCours = null;
+      eclairagesAInspecter = [];
+      indexActuel = 0;
+
+      document.getElementById('eclairage_id').textContent = '';
+      document.getElementById('posx').textContent = '';
+      document.getElementById('posy').textContent = '';
+      document.getElementById('posz').textContent = '';
+      document.getElementById('remarque_input').value = '';
+
+      showTab('visites');
+      loadVisites();
+    }
+  }, 800); // délai pour laisser le feedback s’afficher
+}
+
+
+// FONCTION DE CHARGEMENT DES SALLES ----------------------------------------------------------------------
+
+    // Fonction pour charger les salles
+    function loadSalles() {
+  fetch('http://localhost:3000/api/salles')
+    .then(response => response.json())
+    .then(data => {
+      const salleSelect = document.getElementById('salle_select'); // pour les éclairages
+      const visiteSalleSelect = document.getElementById('visite_salle_select'); // pour les visites
+      const sallesList = document.getElementById('salles_list'); // affichage liste sous création
+
+      if (salleSelect) salleSelect.innerHTML = '';
+      if (visiteSalleSelect) visiteSalleSelect.innerHTML = '';
+      if (sallesList) sallesList.innerHTML = '';
+
+      data.forEach(salle => {
+        // ➕ Liste déroulante pour les éclairages
+        if (salleSelect) {
+          const option = document.createElement('option');
+          option.value = salle.id;
+          option.textContent = salle.nom;
+          salleSelect.appendChild(option);
+        }
+
+        // ➕ Liste déroulante pour les visites
+        if (visiteSalleSelect) {
+          const option = document.createElement('option');
+          option.value = salle.id;
+          option.textContent = salle.nom;
+          visiteSalleSelect.appendChild(option);
+        }
+
+        // ➕ Liste sous le formulaire de création
+        if (sallesList) {
+          const li = document.createElement('li');
+          li.textContent = salle.nom;
+
+          const deleteButton = document.createElement('button');
+          deleteButton.className = 'delete';
+          deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i> Supprimer';
+          deleteButton.style.marginLeft = '10px';
+          deleteButton.onclick = () => deleteSalle(salle.id);
+
+          li.appendChild(deleteButton);
+          sallesList.appendChild(li);
+        }
+      });
+    })
+    .catch(error => console.error('Erreur lors de la récupération des salles:', error));
+}
+
+    // Initialiser les données de la page
+    window.onload = function() {
+      loadSalles();
+      loadVisites();
+      loadUtilisateurs();
+    }
+  </script>
+</body>
+</html>

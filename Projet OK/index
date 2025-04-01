@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ajouter un éclairage</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+    h1 {
+      color: #333;
+    }
+    form {
+      background: #fff;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 10px;
+    }
+    input {
+      width: calc(100% - 20px);
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 15px;
+      border: none;
+      background-color: #28a745;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    #responseMessage {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <h1>Ajouter un éclairage</h1>
+  <form id="eclairageForm">
+    <label for="Id_Salle">ID Salle :</label>
+    <input type="number" id="Id_Salle" name="Id_Salle" required>
+
+    <label for="Id_EclairSalle">ID Éclairage Salle :</label>
+    <input type="number" id="Id_EclairSalle" name="Id_EclairSalle" required>
+
+    <label for="PosX">Position X :</label>
+    <input type="number" step="any" id="PosX" name="PosX" required>
+
+    <label for="PosY">Position Y :</label>
+    <input type="number" step="any" id="PosY" name="PosY" required>
+
+    <label for="PosZ">Position Z :</label>
+    <input type="number" step="any" id="PosZ" name="PosZ" required>
+
+    <button type="submit">Envoyer</button>
+  </form>
+
+  <p id="responseMessage"></p>
+
+  <script>
+    const form = document.getElementById('eclairageForm');
+    const responseMessage = document.getElementById('responseMessage');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault(); // Empêche le rechargement de la page
+
+      // Récupère les données du formulaire
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+
+      try {
+        // Envoie les données au backend
+        const response = await fetch('http://localhost:3000/api/eclairages', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          responseMessage.textContent = `Succès : ${result.message}`;
+          responseMessage.style.color = 'green';
+        } else {
+          const error = await response.json();
+          responseMessage.textContent = `Erreur : ${error.error}`;
+          responseMessage.style.color = 'red';
+        }
+      } catch (err) {
+        responseMessage.textContent = `Erreur réseau : ${err.message}`;
+        responseMessage.style.color = 'red';
+      }
+    });
+  </script>
+</body>
+</html>
