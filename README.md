@@ -25,3 +25,5 @@ Permettre à un opérateur d’effectuer des visites d’éclairage de manière 
 - **Backend** : Node.js + Express
 - **Base de données** : MySQL (via Docker)
 - **Outils futurs** : Inscape 9.0 + Hololens (pour la partie AR)
+
+Se référer à la V5 pour la version finale de notre projet !
